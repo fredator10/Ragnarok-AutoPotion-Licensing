@@ -2,7 +2,7 @@
 #Include AutoUpdate.ahk
 
 updateIntervalDays := 0
-FILE := "https://raw.githubusercontent.com/stealzy/AutoUpdate/master/ExampleSilentAutoUpdate.ahk"
+FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/EclipseRO_AutoPots.ahk"
 CHANGELOG_URL := "https://raw.githubusercontent.com/stealzy/AutoUpdate/master/CHANGELOG.md"
 VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
 WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
