@@ -1,0 +1,176 @@
+#SingleInstance force
+#Include AutoUpdate.ahk
+
+FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/EclipseRO_AutoPots.ahk"
+mode := 1
+
+AutoUpdate(FILE, mode)
+
+#SingleInstance force
+#Persistent
+if (A_ScriptName="EclipseRO-AutoPotion.ahk"){
+}
+	else{
+		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.
+		ExitApp
+}
+HxD = 14847428
+CURHP:=ReadMemory(HxD,"ahk_exe EclipseRO.exe")
+MAXHP:=ReadMemory(HxD + 4,"ahk_exe EclipseRO.exe")
+CURSP:=ReadMemory(HxD + 8,"ahk_exe EclipseRO.exe")
+MAXSP:=ReadMemory(HxD + 12,"ahk_exe EclipseRO.exe")
+alfred := 3766409935
+RegRead, HP,HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, HP_Threshold_ECLIPSE
+RegRead, HP_Button, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, HP_HOTKEY_BUTTON_ECLIPSE
+RegRead, SP_Button, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, SP_HOTKEY_BUTTON_ECLIPSE
+RegRead, SP, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, SP_Threshold_ECLIPSE 
+WinGet, xPID, PID, ahk_exe EclipseRO.exe
+WinGet, xClient, ProcessName, ahk_exe EclipseRO.exe
+DriveGet, serial, Serial, C:
+testnumber := 1413245231
+totalserial := serial + testnumber
+;----------- UI ----------------
+;Menu, Tray, Add, Restore, Restore
+;Menu, Tray, default, Restore
+;Menu, Tray, Click, 2
+Gui, Font, cBlack
+Gui, Color, White
+Gui, Show, w380 h220, -Ragnarok Gepard Potion (^-_-^)
+Gui, font, w800
+Gui, Add, Text, xp+5 yp+15 cFA0000, License Number: %totalserial%
+Gui, Add, Text,c000000, PID : %xPID% | Client : %xClient%
+;---------Function Buttons ----------
+Gui, Add, Groupbox, cBlue xp yp+20 w350 h80 vGroupbox
+;-------- HP VARIABLES ------
+Gui, font, w1000
+if auto_HP
+    Gui, Add, Checkbox, xp+40 yp+25 +Checked c002272 vauto_HP, Health
+else
+    Gui, Add, Checkbox, xp+40 yp+25 c002272 vauto_HP, Health
+Gui, font, w8
+Gui, Add, Text, xp+80 yp, Press:
+StringRight, temp, HP_Button, 1
+Gui, Add, DropdownList, xp+38 yp-3 w50 +Choose%temp% vHP_Button,F1|F2|F3|F4|F5|F6|F7|F8|F9|Q|W|E|R|T|Y|U|I|O|P|A|S|D|F|G|H|J|K|L|Z|X|C|V|B|N|M
+Gui, Add, Text, xp+58 yp+3, if HP <
+Gui, Add, Edit, xp+40 yp-3 vHP w40 cBlack +Number Limit2, 
+Gui, Add, Updown,, %HP%
+Gui, Add, Text, xp+25 yp+3, `%
+; --------SP VARIABLES --------
+Gui, font, w1000
+if auto_SP
+    Gui, Add, Checkbox, x55 yp+27 +Checked cFF5E00 vauto_SP, Mana
+else
+    Gui, Add, Checkbox, x55 yp+27 cFF5E00 vauto_SP, Mana
+Gui, font, w8
+Gui, Add, Text, xp+80 yp, Press:
+StringRight, temp, SP_Button, 1
+Gui, Add, DropdownList, xp+38 yp-3 w50 +Choose%temp% vSP_Button,F1|F2|F3|F4|F5|F6|F7|F8|F9|Q|W|E|R|T|Y|U|I|O|P|A|S|D|F|G|H|J|K|L|Z|X|C|V|B|N|M
+Gui, Add, Text, xp+58 yp+3, if SP <
+Gui, Add, Edit, xp+40 yp-3 vSP w40 cBlack +Number Limit2, 
+Gui, Add, Updown,, %SP%
+Gui, Add, Text, xp+25 yp+3, `%
+Gui, Add, Button, x140 y150 w80 h60 vstart gstart, Start
+return
+;-------------- W I P Tray Minimize --------------
+;Restore:
+;  gui +lastfound
+;  WinShow
+;  WinRestore
+;  return
+start:
+xPID := "ahk_id " . WinExist("ahk_exe EclipseRO.exe")
+#If WinExist(xPID)
+start := !start
+Gui, submit, nohide
+if start
+{
+    GuiControl,, start, Stop
+	;SetTimer, NEW_LABEL, 0
+	SetTimer, HP_SP_INFO, 0
+	start = 1
+		
+	{
+	if auto_HP
+        SetTimer, Auto_Potion_HP, 0
+    if auto_SP
+        SetTimer, Auto_Potion_SP, 0
+				if (serial != alfred)
+    {
+	MsgBox, 262160, ERROR, License is not Active.`nContact Author.
+     ExitApp
+ }
+	}
+}
+else
+{
+    GuiControl,, start, Start
+	SetTimer, Auto_Potion_HP, Off
+    SetTimer, Auto_Potion_SP, Off
+	;SetTimer, NEW_LABEL, Off
+	SetTimer, HP_SP_INFO, Off
+	start = 0
+}
+return
+
+Auto_Potion_HP:
+			CURHP:=ReadMemory(HxD,"ahk_exe EclipseRO.exe")
+			MAXHP:=ReadMemory(HxD + 4,"ahk_exe EclipseRO.exe")
+		if (CURHP/MAXHP * 100 <= HP) {
+	ControlSend,,{%HP_Button%},% xPID
+		}
+		
+return
+
+Auto_Potion_SP:
+			CURSP:=ReadMemory(HxD + 8,"ahk_exe EclipseRO.exe")
+			MAXSP:=ReadMemory(HxD + 12,"ahk_exe EclipseRO.exe")
+		if (CURSP/MAXSP * 100 <= SP) {
+	ControlSend,,{%SP_Button%},% xPID
+		}
+return
+
+HP_SP_INFO:
+			if WinActive(xPID) 
+			{ 
+				ToolTip, AUTO POTION - ON | HP = %CURHP% / %MAXHP% | SP = %CURSP% / %MAXSP%,0,0
+			}
+			else 
+			{ 
+				Tooltip 
+			}
+			CURHP:=ReadMemory(HxD,"ahk_exe EclipseRO.exe")
+			MAXHP:=ReadMemory(HxD + 4,"ahk_exe EclipseRO.exe")
+			CURSP:=ReadMemory(HxD + 8,"ahk_exe EclipseRO.exe")
+			MAXSP:=ReadMemory(HxD + 12,"ahk_exe EclipseRO.exe")
+return
+		
+;NEW_LABEL:
+;GuiSize:
+ ; if (A_EventInfo = 1)
+  ;  WinHide
+	;  if WinActive("ahk_exe EclipseRO.exe") 
+	;		{ 
+		;		ToolTip, AUTO POTION - ON | HP = %HP%`% | SP = %SP%`% | Button = %HP_Button% | HP = %CURHP% / %MAXHP% | SP = %CURSP% / %MAXSP%,0,0
+		;	}
+		;	else
+		;	{
+		;		ToolTip,
+		;	}
+		;	return
+ReadMemory(MADDRESS,PROGRAM)
+{
+winget, pid, PID, ahk_exe EclipseRO.exe
+VarSetCapacity(MVALUE,4,0)
+ProcessHandle := DllCall("OpenProcess", "Int", 24, "Char", 0, "UInt", pid, "UInt")
+DllCall("ReadProcessMemory","UInt",ProcessHandle,"UInt",MADDRESS,"Str",MVALUE,"UInt",4,"UInt *",0)
+Loop 4
+result += *(&MVALUE + A_Index-1) << 8*(A_Index-1)
+return, result  
+}
+
+GuiClose:
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, HP_HOTKEY_BUTTON_ECLIPSE, %HP_Button%
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, SP_HOTKEY_BUTTON_ECLIPSE, %SP_Button%
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, HP_Threshold_ECLIPSE, %HP%
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_ECLIPSE, SP_Threshold_ECLIPSE, %SP% 
+ExitApp
