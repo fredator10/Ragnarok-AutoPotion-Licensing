@@ -5,3 +5,6 @@ FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licens
 mode := 1
 
 AutoUpdate(FILE, mode)
+
+
+;sample
