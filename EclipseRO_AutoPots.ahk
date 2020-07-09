@@ -10,7 +10,7 @@ WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
 AutoUpdate(FILE,, updateIntervalDays, [CHANGELOG_URL, VERSION_REGEX, WhatNew_REGEX])
 
 
-
+;Hello
 
 ;Script by fredatorzxc
 
