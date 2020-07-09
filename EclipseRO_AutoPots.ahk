@@ -3,12 +3,10 @@
 
 FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/EclipseRO_AutoPots.ahk"
 mode := 1
-CHANGELOG_URL := "https://raw.githubusercontent.com/stealzy/AutoUpdate/master/CHANGELOG.md"
-VERSION_REGEX := "Oi)(?<=Version )(\d+(?:\.\d+)?)"
 
-AutoUpdate(FILE, mode,, [CHANGELOG_URL, VERSION_REGEX])
+AutoUpdate(FILE, mode
 
-;Hello v4
+;Hello v5
 
 
 ;Script by fredatorzxc
