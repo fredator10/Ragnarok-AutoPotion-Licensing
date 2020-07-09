@@ -9,7 +9,7 @@ WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
 
 AutoUpdate(FILE,, updateIntervalDays, [CHANGELOG_URL, VERSION_REGEX, WhatNew_REGEX])
 
-;Hello v7
+;Hello v8
 
 FileDelete, New AutoHotkey Script.ahk.v.backup
 
