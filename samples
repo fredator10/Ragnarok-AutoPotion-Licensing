@@ -8,6 +8,7 @@ AutoUpdate(FILE, mode)
 
 #SingleInstance force
 #Persistent
+FileDelete, EclipseRO-AutoPotion.ahk.v.backup
 if (A_ScriptName="EclipseRO-AutoPotion.ahk"){
 }
 	else{
