@@ -10,7 +10,7 @@ AutoUpdate(FILE, mode)
  #NoTrayIcon
  #SingleInstance off
  SetBatchLines, -1
-if (A_ScriptName = "tester.ahk"){
+if (A_ScriptName = "EclipseRO-AutoPotion"){
 }
 	else{
 		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.`nFileName must be EclipseRO-AutoPotion
