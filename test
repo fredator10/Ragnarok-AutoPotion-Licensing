@@ -1,1 +1,3 @@
-alfred
+$F1::
+Msgbox, hey
+Return
