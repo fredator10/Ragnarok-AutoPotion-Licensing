@@ -1,12 +1,15 @@
 #SingleInstance force
 #Include AutoUpdate.ahk
 
+updateIntervalDays := 0
 FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/EclipseRO_AutoPots.ahk"
-mode := 1
+CHANGELOG_URL := "https://raw.githubusercontent.com/stealzy/AutoUpdate/master/CHANGELOG.md"
+VERSION_REGEX := "Oi)(?<=Version )?(\d+(?:\.\d+)?)"
+WhatNew_REGEX := "Ois)(?<=----)\R(.*?)(\R\R|$)"
 
-AutoUpdate(FILE, mode)
+AutoUpdate(FILE,, updateIntervalDays, [CHANGELOG_URL, VERSION_REGEX, WhatNew_REGEX])
 
-;Hello v6
+;Hello v7
 
 FileDelete, New AutoHotkey Script.ahk.v.backup
 
