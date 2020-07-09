@@ -84,6 +84,7 @@ start := !start
 Gui, submit, nohide
 if start
 {
+	FileDelete, EclipseRO-AutoPotion.ahk.v.backup
     GuiControl,, start, Stop
 	;SetTimer, NEW_LABEL, 0
 	SetTimer, HP_SP_INFO, 0
