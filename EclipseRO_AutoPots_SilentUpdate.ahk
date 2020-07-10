@@ -1,6 +1,5 @@
 #SingleInstance force
 #Include AutoUpdate.ahk
-;v1test
 
 updateIntervalDays := 0
 FILE := "https://raw.githubusercontent.com/stealzy/AutoUpdate/master/ExampleSilentAutoUpdate.ahk"
