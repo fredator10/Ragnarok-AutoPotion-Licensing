@@ -17,6 +17,12 @@ AutoUpdate(FILE, mode)
  #NoTrayIcon
  #SingleInstance off
  SetBatchLines, -1
+ if (A_ScriptName = "FullRO-AutoPotion.ahk"){
+ }
+	else{
+		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.`nFileName must be EclipseRO-AutoPotion
+		ExitApp
+ }
  if A_IsCompiled
  {
    Ahk=%A_ScriptDir%\AutoHotkey.exe
