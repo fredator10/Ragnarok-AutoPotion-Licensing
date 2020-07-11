@@ -20,7 +20,7 @@ AutoUpdate(FILE, mode)
  if (A_ScriptName = "FullRO-AutoPotion.ahk"){
  }
 	else{
-		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.`nFileName must be EclipseRO-AutoPotion
+		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.`nFileName must be FullRO-AutoPotion
 		ExitApp
  }
  if A_IsCompiled
