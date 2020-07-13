@@ -1,13 +1,10 @@
 #SingleInstance force
 #Include AutoUpdate.ahk
 
-FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/FullRO_Potion"
+FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/LoveRO_Potion"
 mode := 1
 
 AutoUpdate(FILE, mode)
-
-
-
 
 ;Script by fredatorzxc
 
