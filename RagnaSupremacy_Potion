@@ -6,6 +6,8 @@ mode := 1
 
 AutoUpdate(FILE, mode)
 
+alfred := "RagnaSupremacyRO-AutoPotion.ahk"
+
 ;changelogs : removed default tray options
 ;Script by fredatorzxc
 
@@ -15,7 +17,7 @@ AutoUpdate(FILE, mode)
  #NoTrayIcon
  #SingleInstance off
  SetBatchLines, -1
-if (A_ScriptName = "RagnaSupremacyRO-AutoPotion.ahk"){
+if (A_ScriptName = alfred){
 }
 	else{
 		MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE.`nFileName must be RagnaSupremacyRO-AutoPotion
