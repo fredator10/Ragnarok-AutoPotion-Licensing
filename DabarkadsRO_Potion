@@ -19,7 +19,7 @@ alfred := "DabarkadsRO-AutoPotion.ahk"
  if (A_ScriptName = alfred){
  }
  else{
- MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE. FileName must be RagnaSupremacyRO-AutoPotion
+ MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE. FileName must be DabarkadsRO-AutoPotion
  ExitApp
  }
 
