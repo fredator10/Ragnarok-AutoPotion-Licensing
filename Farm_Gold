@@ -1,7 +1,7 @@
 #SingleInstance force
 #Include AutoUpdate.ahk
 
-FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/RagnaSupremacy_Potion"
+FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/Farm_Gold"
 mode := 1
 
 AutoUpdate(FILE, mode)
