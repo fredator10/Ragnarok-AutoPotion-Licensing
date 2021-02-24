@@ -1,0 +1,613 @@
+#SingleInstance force
+#Include AutoUpdate.ahk
+
+FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/RagnaSupremacy_Potion"
+mode := 1
+
+AutoUpdate(FILE, mode)
+
+#SingleInstance force
+#Persistent
+SetWorkingDir %A_ScriptDir%
+if not A_IsAdmin
+{
+   Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
+   ExitApp
+}
+RegRead, WARPERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERX_COORDINATES_FREEDOM
+RegRead, WARPERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERY_COORDINATES_FREEDOM
+RegRead, SELFX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFX_COORDINATES_FREEDOM
+RegRead, SELFY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFY_COORDINATES_FREEDOM
+RegRead, HEALERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERX_COORDINATES_FREEDOM
+RegRead, HEALERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERY_COORDINATES_FREEDOM
+RegRead, TOOLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLX_COORDINATES_FREEDOM
+RegRead, TOOLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLY_COORDINATES_FREEDOM
+RegRead, SELLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLX_COORDINATES_FREEDOM
+RegRead, SELLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLY_COORDINATES_FREEDOM
+RegRead, GOLDX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDX_COORDINATES_FREEDOM
+RegRead, GOLDY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDY_COORDINATES_FREEDOM
+RegRead, OKAYX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYX_COORDINATES_FREEDOM
+RegRead, OKAYY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYY_COORDINATES_FREEDOM
+RegRead, SEN,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, ZENY_COORDINATES_FREEDOM
+FileDelete, %A_WorkingDir%\Coordinates.txt
+FileAppend, Coordinates`nWarper = %WARPERX% `, %WARPERY%`nSelf = %SELFX% `, %SELFY%`nHealer NPC = %HEALERX% `, %HEALERY%`nTool Dealer NPC = %TOOLX% `, %TOOLY%`nSell Button = %SELLY% `, %SELLY%`nGold = %GOLDX% `, %GOLDY%`nOkay Button = %OKAYX% `, %OKAYY%`n, %A_WorkingDir%\Coordinates.txt
+Home::Pause
+Del::Reload
+$F8::
+Hex := 0x009A51E0
+Hex2 := 0x009A51D4
+TheMap := 0x008E8960
+HPIndex := 0x009A75A8
+HiddenDungeon03 := 1601466992
+Gonryun := 1970043497
+PayonDungeon05 := 1601790320
+MOOLA := 0x009A51C8
+UMBALA := 1633840501
+LUTIE := 1935764856
+toggle:=!toggle 
+if toggle
+goto, WarpToDungeon
+
+
+WarpToDungeon:
+if (!WARPERX){
+	msgbox, 0, Settings, Warper Coords X is Missing!!!
+}
+else if (!WARPERY){
+	msgbox, 0, Settings, Warper Coords Y is Missing!!!
+}
+	else{
+	Sleep, 2000
+	send {LAlt Down}{9}{LAlt Up}
+   	sleep, 1000
+   	;MouseMove, 731, 312 ; >>> warper coords
+	MouseMove, %WARPERX%, %WARPERY% ; >>> warper coords
+	sleep, 800
+	click, 10
+	sleep, 800
+	Send {Enter}
+	sleep, 800
+	Send {Enter}
+	sleep, 800
+	Send {Enter}
+	sleep, 800
+	goto, CheckFarmMap
+}
+return
+
+
+CheckFarmMap:
+Sleep, 1000
+Loop{
+MAP:=ReadMemory(TheMap,"ahk_exe Client.exe")
+If (MAP = PayonDungeon05){
+Goto, AutoFarm
+}
+Else{
+Goto, WarpToDungeon
+     }
+}
+Return
+
+
+AutoFarm:
+Sleep, 1000
+if (!SELFX){
+	msgbox, 0, Settings, SELF Coords X is Missing!!!
+}
+else if (!SELFY){
+	msgbox, 0, Settings, SELF Coords Y is Missing!!!
+}
+else{
+Loop{
+CURWEIGHT:=ReadMemory(Hex,"ahk_exe Client.exe")
+MAXWEIGHT:=ReadMemory(Hex2,"ahk_exe Client.exe")
+CURSP:=ReadMemory(HPIndex + 8,"ahk_exe Client.exe")
+MAXSP:=ReadMemory(HPIndex + 12,"ahk_exe Client.exe")
+MAP123:=ReadMemory(TheMap,"ahk_exe Client.exe")
+ZENY:=ReadMemory(MOOLA,"ahk_exe Client.exe")
+Algorithm2 := (((CURWEIGHT/MAXWEIGHT) * 100))
+Value := Floor(Algorithm2)
+Money := commaFormat(ZENY)
+ToolTip, GOLD BOT is ON | Weight is %Value%`% | Zeny is %Money% M,0,0
+total := CURWEIGHT/MAXWEIGHT * 100
+Algorithm := (((CURWEIGHT/MAXWEIGHT) * 100)) < 80
+AlgorithmSP := (((CURSP/MAXSP) * 100)) < 10
+if (Algorithm) {
+	;MouseMove, 646, 402 ; >>> self coords
+	MouseMove, %SELFX%, %SELFY% ; >>> self coords
+	Send {f1}
+	Sleep, 50
+	Click, 3
+	Sleep, 400
+	send {f2}
+	sleep 200
+	send {enter}
+	Sleep 200
+}
+else{
+goto, CheckSavePoint
+     }
+if (AlgorithmSP)
+	goto, WarpToHeal
+}
+}
+return
+
+CheckSavePoint:
+Sleep, 2000
+Send {LAlt Down}{9}{LAlt Up}
+Loop{
+MAP:=ReadMemory(TheMap,"ahk_exe Client.exe")
+If (MAP = LUTIE){
+Goto, GoldToNpc
+}
+Else{
+Send {LAlt Down}{9}{LAlt Up}
+     }
+}
+Return
+
+WarpToHeal:
+Sleep, 2000
+if (!HEALERX){
+	msgbox, 0, Settings, Healer NPC Coords X is Missing!!!
+}
+else if (!HEALERY){
+	msgbox, 0, Settings, Healer NPC Coords Y is Missing!!!
+}
+else{
+	Sleep, 1000
+	Send {LAlt Down}{9}{LAlt Up}
+	Send {LAlt Down}{9}{LAlt Up}
+	Sleep, 3000
+	;mousemove, 495, 324 ; >>  healer coord	
+	mousemove, %HEALERX%, %HEALERY% ; >>  healer coord	
+	Click, 5
+	Sleep, 800
+	goto, WarpToDungeon
+}
+	return
+	
+GoldToNpc:
+Sleep, 1000
+if (!TOOLX){
+	msgbox, 0, Settings, Tool Dealer Coords X is Missing!!!
+}
+else if (!TOOLY){
+	msgbox, 0, Settings, Tool Dealer Coords Y is Missing!!!
+}
+else if (!SELLX){
+	msgbox, 0, Settings, SELL Button Coords X is Missing!!!
+}
+else if (!SELLY){
+	msgbox, 0, Settings, SELL Button Coords Y is Missing!!!
+}
+else if (!GOLDX){
+	msgbox, 0, Settings, GOLD Button Coords X is Missing!!!
+}
+else if (!GOLDY){
+	msgbox, 0, Settings, GOLD Button Coords Y is Missing!!!
+}
+else if (!OKAYX){
+	msgbox, 0, Settings, Okay Button Coords X is Missing!!!
+}
+else if (!OKAYY){
+	msgbox, 0, Settings, Okay Button Coords Y is Missing!!!
+}
+else{
+	Sleep 1000
+	;mousemove, 782, 294 ;>>> tool dealer coor
+	mousemove, %TOOLX%, %TOOLY% ;>>> tool dealer coor
+	Click, 5
+	Sleep, 800
+	;mousemove, 721, 607 ;>>> sell button 
+	mousemove, %SELLX%, %SELLY% ;>>> sell button
+	Click, 5
+	Sleep, 800
+	;mousemove, 59, 192 ; >> gold location
+	mousemove, %GOLDX%, %GOLDY% ; >> gold location
+	Click, 10
+	Sleep, 1500
+	;mousemove, 477, 457 ;>>> okay button
+	mousemove, %OKAYX%, %OKAYY% ;>>> okay button
+	Click, 5
+	Sleep, 800
+	mousemove, %HEALERX%, %HEALERY% ; >>  healer coord	
+	Click, 5
+	Sleep, 800
+	goto, CheckZeny
+}
+return
+
+CheckZeny:
+Sleep, 1000
+Loop{
+	ZENY:=ReadMemory(MOOLA,"ahk_exe Client.exe")
+	PERA:= %SEN%
+	if (ZENY > PERA){
+  	sleep, 2000
+	goto, DONE
+}
+else{
+	goto, WarpToDungeon
+	}
+}
+return
+
+DONE:
+msgbox, ZENY REACHED!!!!!
+EXITAPP
+
+;;;;;;;;;;;;;;; @commands
+
+:*B0:@selfx::
+	Input, selfeks, V, {enter}
+	SELFX = %selfeks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Spam Cell is %selfeks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@selfy::
+	Input, selfway, V, {enter}
+	SELFY = %selfway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+	TrayTip NPC/Cell Coordinates Notification!!!, Y Coordinate for Spam Cell is %selfway%
+return
+
+:*B0:@warperx::
+	Input, warpereks, V, {enter}
+	WARPERX = %warpereks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Warper NPC is %warpereks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@warpery::
+	Input, warperway, V, {enter}
+	WARPERY = %warperway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+	TrayTip NPC/Cell Coordinates Notification!!!, Y Coordinate for Warper NPC is %warperway%
+return
+
+:*B0:@healerx::
+	Input, healereks, V, {enter}
+	HEALERX = %healereks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Healer NPC is %healereks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@healery::
+	Input, healerway, V, {enter}
+	HEALERY = %healerway%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Healer NPC is %healerway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@toolx::
+	Input, tooleks, V, {enter}
+	TOOLX = %tooleks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Tool Dealer NPC is %tooleks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@tooly::
+	Input, toolway, V, {enter}
+	TOOLY = %toolway%
+	TrayTip NPC/Cell Coordinates Notification!!!, Y Coordinate for Tool Dealer NPC is %toolway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@sellx::
+	Input, selleks, V, {enter}
+	SELLX = %selleks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Sell Button is %selleks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@selly::
+	Input, sellway, V, {enter}
+	SELLY = %sellway%
+	TrayTip NPC/Cell Coordinates Notification!!!, Y Coordinate for Sell Button is %sellway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@goldx::
+	Input, goldeks, V, {enter}
+	GOLDX = %goldeks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Gold Item is %goldeks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@goldy::
+	Input, goldway, V, {enter}
+	GOLDY = %goldway%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Gold Item is %goldway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@okx::
+	Input, okayeks, V, {enter}
+	OKAYX = %okayeks%
+	TrayTip NPC/Cell Coordinates Notification!!!, X Coordinate for Okay Button is %okayeks%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@oky::
+	Input, okayway, V, {enter}
+	OKAYY = %okayway%
+	TrayTip NPC/Cell Coordinates Notification!!!, Y Coordinate for Okay Button is %okayway%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+:*B0:@zeny::
+	Input, pakshetsen, V, {enter}
+	SEN = %pakshetsen%
+	Money2 := commaFormat(pakshetsen)
+	TrayTip ZENY THRESHOLD, ZENY THRESHOLD IS SET TO %Money2%
+	;msgbox, X Coordinates for Spam Cell is %selfeks%
+return
+
+
+::@save::
+{
+	if (!WARPERX){
+	msgbox, 0, Coordinates, Warper Coords X is Missing!!!
+	}
+	else{
+	}
+	if (!WARPERY)
+	{
+	msgbox, 0, Coordinates, Warper Coords Y is Missing!!!
+	}
+	else{
+	}
+	if (!SELFX){
+	msgbox, 0, Coordinates, SELF Coords X is Missing!!!
+	}
+	else{
+	}
+	if (!SELFY)
+	{
+	msgbox, 0, Coordinates, SELF Coords Y is Missing!!!
+	}
+	else{
+	}
+	if (!HEALERX){
+	msgbox, 0, Coordinates, HEALER NPC X is Missing!!!
+	}
+	else{
+	}
+	if (!HEALERY){
+	msgbox, 0, Coordinates, HEALER NPC Y is Missing!!!
+	}
+	else{
+	}
+	if (!TOOLX){
+	msgbox, 0, Coordinates, TOOL DEALER NPC X is Missing!!!
+	}
+	else{
+	}
+	if (!TOOLY){
+	msgbox, 0, Coordinates, TOOL DEALER NPC Y is Missing!!!
+	}
+	else{
+	}
+	if (!SELLX){
+	msgbox, 0, Coordinates, SELL BUTTON X is Missing!!!
+	}
+	else{
+	}
+	if (!SELLY){
+	msgbox, 0, Coordinates, SELL BUTTON Y is Missing!!!
+	}
+	else{
+	}
+	if (!GOLDX){
+	msgbox, 0, Coordinates, GOLD ITEM X is Missing!!!
+	}
+	else{
+	}
+	if (!GOLDY){
+	msgbox, 0, Coordinates, GOLD ITEM Y is Missing!!!
+	}
+	else{
+	}
+	if (!OKAYX){
+	msgbox, 0, Coordinates, OKAY BUTTON X is Missing!!!
+	}
+	else{
+	}
+	if (!OKAYY){
+	msgbox, 0, Coordinates, OKAY BUTTON Y is Missing!!!
+	}
+	else{
+	}
+	if (!SEN){
+	msgbox, 0, Threshold, Zeny Threshold is Missing!!!
+	}
+	else{
+	}
+	;warperx
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERX_COORDINATES_FREEDOM, %WARPERX%
+	RegRead, WARPERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERX_COORDINATES_FREEDOM
+	;warpery
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERY_COORDINATES_FREEDOM, %WARPERY%
+	RegRead, WARPERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;self coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFX_COORDINATES_FREEDOM, %SELFX%
+	RegRead, SELFX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFX_COORDINATES_FREEDOM
+	;self coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFY_COORDINATES_FREEDOM, %SELFY%
+	RegRead, SELFY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;healer coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERX_COORDINATES_FREEDOM, %HEALERX%
+	RegRead, HEALERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERX_COORDINATES_FREEDOM
+	;healer coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERY_COORDINATES_FREEDOM, %HEALERY%
+	RegRead, HEALERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;tool dealer coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLX_COORDINATES_FREEDOM, %TOOLX%
+	RegRead, TOOLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLX_COORDINATES_FREEDOM
+	;tool dealer coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLY_COORDINATES_FREEDOM, %TOOLY%
+	RegRead, TOOLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;sell button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLX_COORDINATES_FREEDOM, %SELLX%
+	RegRead, SELLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLX_COORDINATES_FREEDOM
+	;sell button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLY_COORDINATES_FREEDOM, %SELLY%
+	RegRead, SELLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;
+	
+	;gold button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDX_COORDINATES_FREEDOM, %GOLDX%
+	RegRead, GOLDX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDX_COORDINATES_FREEDOM
+	;gold button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDY_COORDINATES_FREEDOM, %GOLDY%
+	RegRead, GOLDY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;
+	
+	;okay button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYX_COORDINATES_FREEDOM, %OKAYX%
+	RegRead, OKAYX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYX_COORDINATES_FREEDOM
+	;okay button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYY_COORDINATES_FREEDOM, %OKAYY%
+	RegRead, OKAYY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;
+	
+	;zeny
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, ZENY_COORDINATES_FREEDOM, %SEN%
+	RegRead, SEN,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, ZENY_COORDINATES_FREEDOM
+	
+	;;;; file append save
+	FileDelete, %A_WorkingDir%\Coordinates.txt
+FileAppend, Coordinates`nWarper = %WARPERX% `, %WARPERY%`nSelf = %SELFX% `, %SELFY%`nHealer NPC = %HEALERX% `, %HEALERY%`nTool Dealer NPC = %TOOLX% `, %TOOLY%`nSell Button = %SELLY% `, %SELLY%`nGold = %GOLDX% `, %GOLDY%`nOkay Button = %OKAYX% `, %OKAYY%, %A_WorkingDir%\Coordinates.txt
+	
+}
+return
+
+::@clear::
+{
+	msgbox, 0, Settings,Saved Coordinates have been Cleared. =)
+	TOOLX = 
+	TOOLY =
+	WARPERX = 
+	WARPERY =
+	SELFX =
+	SELFY =
+	GOLDX =
+	GOLDY =
+	OKAYX =
+	OKAYY =
+	SELLX =
+	SELLY =
+	HEALERX = 
+	HEALERY =
+	
+	;;;;;;;;;;;;;;;;;
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERX_COORDINATES_FREEDOM, %WARPERX%
+	RegRead, WARPERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERX_COORDINATES_FREEDOM
+	;warpery
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERY_COORDINATES_FREEDOM, %WARPERY%
+	RegRead, WARPERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, WARPERY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;self coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFX_COORDINATES_FREEDOM, %SELFX%
+	RegRead, SELFX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFX_COORDINATES_FREEDOM
+	;self coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFY_COORDINATES_FREEDOM, %SELFY%
+	RegRead, SELFY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELFY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;healer coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERX_COORDINATES_FREEDOM, %HEALERX%
+	RegRead, HEALERX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERX_COORDINATES_FREEDOM
+	;healer coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERY_COORDINATES_FREEDOM, %HEALERY%
+	RegRead, HEALERY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, HEALERY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;tool dealer coords x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLX_COORDINATES_FREEDOM, %TOOLX%
+	RegRead, TOOLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLX_COORDINATES_FREEDOM
+	;tool dealer coords y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLY_COORDINATES_FREEDOM, %TOOLY%
+	RegRead, TOOLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, TOOLY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;;;
+	
+	;sell button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLX_COORDINATES_FREEDOM, %SELLX%
+	RegRead, SELLX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLX_COORDINATES_FREEDOM
+	;sell button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLY_COORDINATES_FREEDOM, %SELLY%
+	RegRead, SELLY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, SELLY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;;;
+	
+	;gold button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDX_COORDINATES_FREEDOM, %GOLDX%
+	RegRead, GOLDX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDX_COORDINATES_FREEDOM
+	;gold button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDY_COORDINATES_FREEDOM, %GOLDY%
+	RegRead, GOLDY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, GOLDY_COORDINATES_FREEDOM
+	
+	;;;;;;;;;;;;;;;;;;;
+	
+	;okay button x
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYX_COORDINATES_FREEDOM, %OKAYX%
+	RegRead, OKAYX,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYX_COORDINATES_FREEDOM
+	;okay button y
+	RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYY_COORDINATES_FREEDOM, %OKAYY%
+	RegRead, OKAYY,HKEY_CURRENT_USER\Software\TEST_APP_FREEDOM, OKAYY_COORDINATES_FREEDOM
+}
+return
+
+::@runcoords::
+Run, Windowspy.ahk
+return
+	
+ReadMemory(MADDRESS=0,PROGRAM="")
+{
+	Static OLDPROC, ProcessHandle
+	VarSetCapacity(MVALUE,4,0)
+	If PROGRAM != %OLDPROC%
+	{
+		WinGet, pid, pid, % OLDPROC := PROGRAM
+		ProcessHandle := ( ProcessHandle ? 0*(closed:=DllCall("CloseHandle"
+		,"UInt",ProcessHandle)) : 0 )+(pid ? DllCall("OpenProcess"
+		,"Int",16,"Int",0,"UInt",pid) : 0)
+	}
+	If (ProcessHandle) && DllCall("ReadProcessMemory","UInt"
+	,ProcessHandle,"UInt",MADDRESS,"Str",MVALUE,"UInt",4,"UInt *",0)
+	return *(&MVALUE+3)<<24 | *(&MVALUE+2)<<16 | *(&MVALUE+1)<<8 | *(&MVALUE)
+	return !ProcessHandle ? "Handle Closed: " closed : "Fail"
+}
+
+commaFormat(num){
+    num:=strSplit(num,".")
+    numlen:=strlen(num[1])
+
+    loop,parse,% num[1]
+        xnum.=!mod(numlen-a_index,3) && a_index != numlen ? a_loopfield "," : a_loopfield
+    return num[2]?xnum "." num[2]:xnum
+}
