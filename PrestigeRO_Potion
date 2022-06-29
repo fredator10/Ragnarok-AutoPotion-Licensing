@@ -1,3 +1,4 @@
+;changelog 1
 #SingleInstance off
 #Include AutoUpdate.ahk
 
