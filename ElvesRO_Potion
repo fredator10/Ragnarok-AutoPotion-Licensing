@@ -1,9 +1,9 @@
-;test update
+;test update2
 #SingleInstance off
 #Include AutoUpdate.ahk
 
 FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/ElvesRO_Potion"
-mode := 16
+mode := 8
 
 AutoUpdate(FILE, mode)
 
