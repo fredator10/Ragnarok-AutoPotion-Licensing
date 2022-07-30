@@ -1,4 +1,3 @@
-;test update15
 #SingleInstance off
 #Include AutoUpdate.ahk
 
