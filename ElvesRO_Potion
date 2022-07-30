@@ -2,7 +2,7 @@
 #Include AutoUpdate.ahk
 
 FILE := "https://raw.githubusercontent.com/fredator10/Ragnarok-AutoPotion-Licensing/master/ElvesRO_Potion"
-mode := 1
+mode := 16
 
 AutoUpdate(FILE, mode)
 
