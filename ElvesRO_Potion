@@ -21,6 +21,7 @@ AutoUpdate(FILE, mode)
  else{
  MsgBox, 262160, ERROR, DO NOT RENAME THIS FILE. FileName must be ElvesRO-AutoPotion
  ExitApp
+ }
  if A_IsCompiled
  {
    Ahk=%A_ScriptDir%\AutoHotkey.exe
